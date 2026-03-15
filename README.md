@@ -14,10 +14,10 @@
 已实现核心能力：
 
 + ✅ AI 意图识别（Intent Recognition）
-  ✅ 状态机流程控制（State Machine）
-  ✅ 可配置任务执行链（Task Chain）
-  ✅ 上下文管理（Context Management）
-  ✅ 模块化服务扩展
++ ✅ 状态机流程控制（State Machine）
++ ✅ 可配置任务执行链（Task Chain）
++ ✅ 上下文管理（Context Management）
++ ✅ 模块化服务扩展
 
 
 
@@ -195,10 +195,10 @@ public class AiMachineTest {
 用于学习：
 
 + ✅ Spring Boot 项目结构
-  ✅ AI Agent 基础设计思想
-  ✅ 状态机设计模式实践
-  ✅ 意图识别 + 流程执行
-  ✅ 小型自动化引擎开发
++ ✅ AI Agent 基础设计思想
++ ✅ 状态机设计模式实践
++ ✅ 意图识别 + 流程执行
++ ✅ 小型自动化引擎开发
 
 
 
@@ -215,9 +215,9 @@ public class AiMachineTest {
 可作为基础框架进一步扩展为：
 
 + ✅ 个人 AI 助手
-  ✅ 简单自动化任务工具
-  ✅ 智能对话流程引擎
-  ✅ 轻量级业务自动化流程
++ ✅ 简单自动化任务工具
++ ✅ 智能对话流程引擎
++ ✅ 轻量级业务自动化流程
 
 项目无冗余依赖，结构清晰，易于理解和二次开发。
 
