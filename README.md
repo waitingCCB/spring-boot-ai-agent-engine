@@ -12,11 +12,12 @@
 项目通过状态机管理流程，通过大模型识别用户意图，并自动执行对应的任务链条。
 
 已实现核心能力：
-✅ AI 意图识别（Intent Recognition）
-✅ 状态机流程控制（State Machine）
-✅ 可配置任务执行链（Task Chain）
-✅ 上下文管理（Context Management）
-✅ 模块化服务扩展
+
++ ✅ AI 意图识别（Intent Recognition）
+  ✅ 状态机流程控制（State Machine）
+  ✅ 可配置任务执行链（Task Chain）
+  ✅ 上下文管理（Context Management）
+  ✅ 模块化服务扩展
 
 
 
@@ -193,11 +194,9 @@ public class AiMachineTest {
 
 ---
 
-# 项目价值
+# 
 
-
-
-本项目非常适合用于学习：
+适合用于学习：
 ✅ Spring Boot 项目结构
 ✅ AI Agent 基础设计思想
 ✅ 状态机设计模式实践
@@ -262,7 +261,7 @@ The core goal is to achieve seamless integration with existing business services
 - ✅ Seamless Call of Multi-Service
 - ✅ Automatic Result Transfer Between Steps
 
-### Project Value
+### 
 
 #### For Learning
 
