@@ -117,8 +117,6 @@ public class AiMachineTest {
         agentMachine.start(config, agentContext, serviceMap);
 
 
-        // 正式启动由用户决定
-        agentMachine.update();
 
         log.info("最终上下文为{}", agentContext);
     }
@@ -188,9 +186,19 @@ public class AiMachineTest {
 
 ![image-20260315210100761](https://cdn.jsdelivr.net/gh/waitingCCB/image-bed@main/image/image-20260315210100761.png)
 
+使用的是事件 + 状态混合驱动的状态机。状态表如下
+
+![image-20260315220504180](C:/Users/wjf/AppData/Roaming/Typora/typora-user-images/image-20260315220504180.png)
+
 意图判断部分，可以自由实现 IIntentRecognizer 接口，实现关键词匹配，或调用不同的AI进行判断
 
 核心是只要加载配置文件，就能自动运行状态机
+
+
+
+---
+
+
 
 用于学习：
 
