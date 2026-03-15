@@ -1,18 +1,17 @@
 package com.flow.agent.Machine.impl;
 
-import com.flow.agent.Machine.IIntentRecognizer;
-import com.flow.agent.enmu.AgentEvent;
 import com.flow.agent.Machine.IAgentChain;
 import com.flow.agent.Machine.IAgentMachine;
+import com.flow.agent.Machine.IIntentRecognizer;
+import com.flow.agent.enmu.AgentEvent;
 import com.flow.agent.enmu.AgentState;
 import com.flow.agent.entity.AgentContext;
 import com.flow.agent.entity.AgentMachineConfig;
 import com.flow.agent.entity.AgentStep;
 import lombok.extern.slf4j.Slf4j;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -49,9 +48,9 @@ public class AgentMachineImpl implements IAgentMachine {
     private IIntentRecognizer intentRecognizer; // 意图识别器
 
 
-
-
-    // ====================== 初始化状态机规则 ======================
+    /**
+     * 初始化状态表
+     */
     @Override
     public void initTable() {
         stateMap.clear();
@@ -89,7 +88,7 @@ public class AgentMachineImpl implements IAgentMachine {
     }
 
 
-    // ====================== 外部启动入口 ======================
+
     /**
      * 启动一次状态机运行
      * @param config 从全局仓库获取的用户配置（包含<意图, List<步骤>>）
@@ -117,7 +116,7 @@ public class AgentMachineImpl implements IAgentMachine {
         this.update();
     }
 
-    // ====================== 意图识别 ======================
+
     @Override
     public String judgeIntent() {
         if (intentRecognizer == null) {
@@ -134,14 +133,14 @@ public class AgentMachineImpl implements IAgentMachine {
         return intentRecognizer.RecognizedIntent(agentContext, intentList);
     }
 
-    // ====================== 加载配置 ======================
+
     @Override
     public boolean loadConfig() {
 
         return agentContext != null && agentConfig != null;
     }
 
-    // ====================== 状态机核心执行逻辑 ======================
+
     @Override
     public void update() {
         log.info("\n当前状态：" + currentState);
@@ -197,7 +196,10 @@ public class AgentMachineImpl implements IAgentMachine {
         }
     }
 
-    // ====================== 事件触发（修复原逻辑BUG） ======================
+
+    /**触发事件
+     * @param event 当前发生的事件
+     */
     private void triggerEvent(AgentEvent event) {
         // 1. 获取当前状态的转换规则
         Transition transition = stateMap.get(currentState);
@@ -228,7 +230,7 @@ public class AgentMachineImpl implements IAgentMachine {
         update();
     }
 
-    // ====================== 工具方法 ======================
+
     public AgentState getCurrentState() {
         return currentState;
     }
