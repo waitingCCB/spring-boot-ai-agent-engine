@@ -1,0 +1,18 @@
+spring:
+  servlet:
+    multipart:
+      max-file-size: 50MB   # 单个文件最大为50MB
+      max-request-size: 100MB # 单次请求总大小最大为100MB
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+    time-zone: GMT+8
+  config:
+    import: optional:file:.env[.properties] # 可选，用于保护敏感信息
+doubao:
+  ark:
+    api-key: e39179c7-928a-404f-8efa-7102b4e93486 # 替换为您的真实API Key
+    base-url: https://ark.cn-beijing.volces.com/api/v3 # 替换为示例代码里的服务地址
+    model: doubao-seed-1-6-flash-250828 # 替换为模型名字
+  pool:
+    max-idle-connections: 5
+    keep-alive-duration: 1

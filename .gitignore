@@ -1,0 +1,8 @@
+.idea/
+*.iml
+target/
+.env
+application.yml
+logs/
+*.log
+.DS_Store
