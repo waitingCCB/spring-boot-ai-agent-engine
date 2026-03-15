@@ -177,7 +177,7 @@ public class AiMachineTest {
 
 ## 时序图
 
-![image-20260315205800291](C:/Users/wjf/AppData/Roaming/Typora/typora-user-images/image-20260315205800291.png)
+![image-20260315205800291](https://cdn.jsdelivr.net/gh/waitingCCB/image-bed@main/image/image-20260315205800291.png)
 
 ---
 
@@ -185,7 +185,7 @@ public class AiMachineTest {
 
 ## 状态机
 
-![image-20260315210100761](C:/Users/wjf/AppData/Roaming/Typora/typora-user-images/image-20260315210100761.png)
+![image-20260315210100761](https://cdn.jsdelivr.net/gh/waitingCCB/image-bed@main/image/image-20260315210100761.png)
 
 意图判断部分，可以自由实现 IIntentRecognizer 接口，实现关键词匹配，或调用不同的AI进行判断
 
