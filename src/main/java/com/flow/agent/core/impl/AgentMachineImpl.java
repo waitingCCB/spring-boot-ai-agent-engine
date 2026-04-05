@@ -1,13 +1,13 @@
-package com.flow.agent.Machine.impl;
+package com.flow.agent.core.impl;
 
-import com.flow.agent.Machine.IAgentChain;
-import com.flow.agent.Machine.IAgentMachine;
-import com.flow.agent.Machine.IIntentRecognizer;
+import com.flow.agent.core.IAgentChain;
+import com.flow.agent.core.IAgentMachine;
+import com.flow.agent.core.IIntentRecognizer;
 import com.flow.agent.enmu.AgentEvent;
 import com.flow.agent.enmu.AgentState;
-import com.flow.agent.entity.AgentContext;
-import com.flow.agent.entity.AgentMachineConfig;
-import com.flow.agent.entity.AgentStep;
+import com.flow.agent.core.AgentContext;
+import com.flow.agent.core.AgentMachineConfig;
+import com.flow.agent.core.AgentStep;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

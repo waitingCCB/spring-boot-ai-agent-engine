@@ -1,6 +1,6 @@
-package com.flow.agent.Machine.impl;
+package com.flow.agent.core.impl;
 
-import com.flow.agent.Machine.ITransition;
+import com.flow.agent.core.ITransition;
 import com.flow.agent.enmu.AgentEvent;
 import com.flow.agent.enmu.AgentState;
 

@@ -1,8 +1,8 @@
-package com.flow.agent.Machine.impl;
+package com.flow.agent.core.impl;
 
-import com.flow.agent.Machine.IAgentChain;
-import com.flow.agent.entity.AgentContext;
-import com.flow.agent.entity.AgentStep;
+import com.flow.agent.core.IAgentChain;
+import com.flow.agent.core.AgentContext;
+import com.flow.agent.core.AgentStep;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
@@ -72,7 +72,7 @@ public class AgentChainImpl implements IAgentChain {
                 } else {
                     // 其他参数正常读取
                     args[i] = getValueFromContextOrStep(context, param.getName(), param.getType(), step);
-                    log.info("第{}个参数赋值为{}",i, args[i]);
+                    log.info("第{}个参数赋值为{}",i + 1, args[i]);
                 }
             }
 

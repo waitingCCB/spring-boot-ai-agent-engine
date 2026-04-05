@@ -76,6 +76,46 @@ public class AIServiceImpl implements AiService {
     }
 
 
+    @Override
+    public String generateAnswerByPrompt(String question, String prompt) {
+        log.info("AI产生单次回答问题为{},提示词为{}", question, prompt);
+        try {
+            // 官方格式提示词
+            String realPrompt = """
+            你是一个AI助手，请根据提示词和用户的规则进行回答。
+            用户问题：%s
+            规则：%s
+           
+            """.formatted(question, prompt);
+
+            // 把消息放进列表！！！
+            List<ChatMessage> messages = new ArrayList<>();
+            messages.add(ChatMessage.builder()
+                    .role(ChatMessageRole.SYSTEM)
+                    .content(realPrompt)
+                    .build());
+
+            // 官方标准非流式请求
+            ChatCompletionRequest request = ChatCompletionRequest.builder()
+                    .model(model)
+                    .messages(messages)  // 现在消息列表有效
+                    .stream(false)
+                    .temperature(0.1)
+                    .maxTokens(2000)
+                    .build();
+
+            // 官方标准调用 + 安全取值
+            var response = arkService.createChatCompletion(request);
+            String result = response.getChoices().get(0).getMessage().getContent().toString().trim();
+
+            log.info("AI返回的结果为：{}", result);
+            return result;
+
+        } catch (Exception e) {
+            log.error("结果返回失败", e);
+            return "服务器错误";
+        }
+    }
 
     public String test(){
         return "测试成功！！！状态机正常运行";

@@ -1,7 +1,7 @@
-package com.flow.agent.Machine.impl;
+package com.flow.agent.core.impl;
 
-import com.flow.agent.Machine.IIntentRecognizer;
-import com.flow.agent.entity.AgentContext;
+import com.flow.agent.core.IIntentRecognizer;
+import com.flow.agent.core.AgentContext;
 import com.flow.agent.service.AiService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;

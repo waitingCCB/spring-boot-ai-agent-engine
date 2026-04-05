@@ -1,4 +1,4 @@
-package com.flow.agent.Machine;
+package com.flow.agent.core;
 
 import com.flow.agent.enmu.AgentEvent;
 import com.flow.agent.enmu.AgentState;

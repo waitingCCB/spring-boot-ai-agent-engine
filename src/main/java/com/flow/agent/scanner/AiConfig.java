@@ -1,4 +1,4 @@
-package com.flow.agent.config;
+package com.flow.agent.scanner;
 
 import com.volcengine.ark.runtime.service.ArkService;
 import okhttp3.ConnectionPool;

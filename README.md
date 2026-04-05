@@ -1,54 +1,289 @@
-# spring-boot-ai-agent-engine 轻量级状态机工作流引擎 V 0.1
+# spring-boot-ai-agent-engine 轻量级状态机工作流引擎 V 0.2
 轻量级 · 可扩展 · AI 智能体核心框架
 
-+ ✨ 一个轻量级的 AI 智能体（AI Agent）实验引擎，基于状态机流程控制 + 大模型意图识别，实现自动化任务编排与执行。
++ ✨ 一个轻量级的 AI Agent 实验引擎，基于状态机流程控制 + 大模型意图识别，实现自动化任务编排与执行。
 
-+ ✨ 目的是尽量实现与原有业务类的无缝结合，由此，可以方便的把原有的业务添加到工作流当中
++   ✨ 无侵入式架构，可与现有业务无缝集成，轻松将原有业务接入 AI 工作流。
+
 
 ---
 
+# V0.2更新：
+
++ ✅ 重构为标准 Spring Boot Starter，支持自动装配，开箱即用 
++ ✨ 采用配置化驱动，支持外部配置，不再硬编码密钥，安全开源 
+
++ ✨ 移除启动类，纯依赖库结构，更适合作为二方包/开源组件使用  
++ ✨ 集成火山引擎/豆包大模型 API，支持 HTTP 连接池、超时、模型配置 
++ ✅ 优化 Bean 加载机制，支持 @EnableAiAgentEngine 一键启用 
++ ✅ 项目结构彻底清理，代码更简洁、更专业、更易于维护 
++ ✅ 支持本地 Maven 打包、install、多项目复用
+
+
+
+---
+
+
+
 ## 项目介绍
-这是一个轻量级 AI 智能体核心框架，用于学习与实践当前热门的 AI Agent 架构思想。
+
+这是一个轻量级 AI 智能体核心框架，用于实践当前热门的 AI Agent 架构思想。
 项目通过状态机管理流程，通过大模型识别用户意图，并自动执行对应的任务链条。
 
 已实现核心能力：
 
-+ ✅ AI 意图识别（Intent Recognition）
-+ ✅ 状态机流程控制（State Machine）
-+ ✅ 可配置任务执行链（Task Chain）
-+ ✅ 上下文管理（Context Management）
-+ ✅ 模块化服务扩展
++  ✅ AI 意图识别（Intent Recognition） 
++ ✅ 状态机流程控制（State Machine） 
++ ✅ 可配置任务执行链（Task Chain） 
++ ✅ 上下文管理（Context Management） 
++ ✅ 模块化服务扩展 
++ ✅ Spring Boot Starter 自动化集成
+
+---
+
+
+
+# 如何使用
+
+在配置文件添加如下配置，并填写豆包的key
+
+```
+doubao:
+  ark:
+    api-key: # 替换为真实API Key
+    base-url: https://ark.cn-beijing.volces.com/api/v3 # 替换为示例代码里的服务地址
+    model: doubao-seed-1-6-flash-250828 # 替换为模型名字
+  pool:
+    max-idle-connections: 5
+    keep-alive-duration: 1
+
+```
+
+
+
+## 一、核心功能说明
+
+本引擎支持两种使用方式：
+
+1. **手动编写 JSON 流程配置 → 运行状态机**
+2. **AI 自动生成流程配置 → 一键执行全自动工作流**
+
+支持通过注解注册业务服务，AI 可自动识别并编排执行步骤。
+
+------
+
+## 二、快速使用（全自动模式・推荐）
+
+AI 自动生成工作流 + 自动执行，**一行配置都不用写**
+
+```
+@SpringBootTest(classes = AgentAutoConfiguration.class)
+@EnableAiAgentEngine
+public class TestDemo {
+
+    @Autowired
+    private AgentUtils agentUtils;
+
+    @Autowired
+    private IAgentMachine agentMachine;
+
+    @Autowired
+    private AiTestService aiTestService;
+
+    @Autowired
+    private AiService aiService;
+
+    @Test
+    public void testAutoRun() {
+        // 用户只需要输入一句话
+        String userQuestion = "我想要听一个开心的故事";
+
+        // 1. AI 自动生成流程配置文件
+        String configJson = agentUtils.getJsonConfig(userQuestion);
+        AgentMachineConfig config = JSON.parseObject(configJson, AgentMachineConfig.class);
+
+        // 2. 注册业务服务，你想给AI提供哪些业务类调用
+        Map<String, Object> serviceMap = new HashMap<>();
+        serviceMap.put("aiTestService", aiTestService);
+        serviceMap.put("aiService", aiService);
+
+        // 3. 启动 AI 状态机
+        AgentContext context = new AgentContext();
+        context.setUserQuestion(userQuestion);
+        agentMachine.start(config, context, serviceMap);
+
+        // 输出最终结果
+        System.out.println("执行结果：" + context);
+    }
+}
+```
+
+------
+
+## 三、手动配置模式（自定义流程）
+
+你可以手动编写 JSON 流程，自由编排步骤：
+
+```
+@Test
+public void testManualRun() {
+    String jsonConfig = """
+    {
+        "agentId": "agent_001",
+        "agentName": "智能问答助手",
+        "account": "123456",
+        "question": "我想要进行测试",
+        "agentStepListMap": {
+            "进行测试": [
+                {
+                    "id": "step1",
+                    "needService": "aiService",
+                    "needMethod": "test"
+                }
+            ],
+            "进行多工作步骤测试": [
+                {
+                    "id": "step1",
+                    "needService": "aiService",
+                    "needMethod": "generateData"
+                },
+                {
+                    "id": "step2",
+                    "needService": "aiService",
+                    "needMethod": "dealData",
+                    "useLastResult": true
+                },
+                {
+                    "id": "step3",
+                    "needService": "aiService",
+                    "needMethod": "finish",
+                    "useLastResult": true
+                }
+            ]
+        }
+    }
+    """;
+
+    AgentMachineConfig config = JSON.parseObject(jsonConfig, AgentMachineConfig.class);
+    agentConfigRegistry.saveConfig(config.getAccount(), config);
+
+    // 启动状态机
+    AgentContext agentContext = new AgentContext();
+    agentContext.setUserQuestion(config.getQuestion());
+
+    Map<String, Object> serviceMap = new HashMap<>();
+    serviceMap.put("aiService", aiService);
+
+    agentMachine.start(config, agentContext, serviceMap);
+}
+```
+
+------
+
+## 四、业务类编写规范（@AgentTool + @AgentMethod）
+
+你只需要给业务类加上注解，AI 就能自动识别、编排、调用！
+
+```
+@AgentTool(
+    serviceName = "aiTestService",    // 服务名称
+    desc = "AI测试用工具，可以生成故事"  // 服务描述
+)
+@Service
+public class AITestService {
+
+    @AgentMethod(methodName = "generateStory",desc = "根据背景和主题生成故事")
+    public String generateStory(
+    		@AgentParam(name = "backGround", desc = "故事背景") String backGround,
+            @AgentParam(name = "topic", desc = "故事主题") String topic
+            ) {
+        // 你的业务逻辑
+        return "生成的故事内容...";
+    }
+}
+```
+
+------
+
+## 五、核心注解说明
+
+|          注解          |                作用                |
+| :--------------------: | :--------------------------------: |
+| `@EnableAiAgentEngine` |         启用 AI 智能体引擎         |
+|      `@AgentTool`      |   标记一个业务服务，让 AI 可识别   |
+|     `@AgentMethod`     | 标记一个方法，作为 AI 可执行的步骤 |
+|     `@AgentParam`      |    声明方法参数，AI 可自动填充     |
+
+------
+
+## 六、执行流程
+
+1. 用户输入一句话
+2. AI 自动识别意图
+3. AI 自动生成执行流程
+4. 状态机自动执行步骤
+5. 自动调用你的业务方法
+6. 返回最终结果
+
+------
+
+
 
 
 
 # 效果
 
-## 测试代码
+## 完整测试代码
 
 具体内容在 \src\test\java\com\flow\agent\machine\AiMachineTest.java 下
 
 ```
-@Slf4j
-@SpringBootTest
-public class AiMachineTest {
 
+package com.flow.agent.machine;
+
+
+import com.alibaba.fastjson2.JSON;
+import com.flow.agent.annotation.EnableAiAgentEngine;
+import com.flow.agent.autoconfigure.AgentAutoConfiguration;
+import com.flow.agent.common.AgentConfigRegistry;
+import com.flow.agent.core.AgentContext;
+import com.flow.agent.core.AgentMachineConfig;
+import com.flow.agent.core.IAgentMachine;
+import com.flow.agent.service.AiService;
+import com.flow.agent.service.impl.AITestService;
+import com.flow.agent.service.impl.AgentUtils;
+import lombok.extern.slf4j.Slf4j;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+
+import java.util.HashMap;
+import java.util.Map;
+
+@SpringBootTest   // 想测试去掉注释就行
+@EnableAiAgentEngine
+@Slf4j
+public class AiMachineTest {
 
     @Autowired
     AgentConfigRegistry agentConfigRegistry;
-
-
 
     @Autowired
     IAgentMachine agentMachine;
 
 
     @Autowired
-    ITestService testService;
-
-
-    @Autowired
     AiService aiService;
 
+    @Autowired
+    AITestService aiTestService;
+
+    @Autowired
+    AgentUtils agentUtils;
+
+    /**
+     * 根據配置文件运行工作流
+     */
     @Test
     public void testMachineRun() {
 
@@ -100,6 +335,7 @@ public class AiMachineTest {
             """;
         // JSON字符串 → 配置类
         AgentMachineConfig config = JSON.parseObject(jsonConfig, AgentMachineConfig.class);
+
         config.setQuestion("我想要进行多工作步骤的测试");
 
         agentConfigRegistry.saveConfig(config.getAccount(), config);
@@ -110,11 +346,14 @@ public class AiMachineTest {
 
         // 给状态机提供业务类
         Map<String, Object> serviceMap = new HashMap<String, Object>();
+
         serviceMap.put("aiService", aiService);
-        serviceMap.put("testService", testService);
 
 
+
+        // 启动状态机
         agentMachine.start(config, agentContext, serviceMap);
+
 
 
 
@@ -122,7 +361,36 @@ public class AiMachineTest {
     }
 
 
+    /**
+     * AI自动生成配置文件
+     */
+    @Test
+    public void testAutoMachineRun() {
+        String userQuestion = "我想要听一个开心的故事";
+
+        // 1. AI 自动生成配置JSON
+        String configJson = agentUtils.getJsonConfig(userQuestion);
+
+        // 2. 直接解析成配置类
+        AgentMachineConfig config = JSON.parseObject(configJson, AgentMachineConfig.class);
+
+        // 3. 提供业务服务
+        Map<String, Object> serviceMap = new HashMap<>();
+        serviceMap.put("aiTestService", aiTestService);
+        serviceMap.put("aiService", aiService);
+
+
+        // 4. 运行状态机
+        AgentContext context = new AgentContext();
+        context.setUserQuestion(userQuestion);
+
+        agentMachine.start(config, context, serviceMap);
+
+        log.info("最终的上下文为{}", context);
+    }
 }
+
+
 ```
 
 输出结果
@@ -249,48 +517,33 @@ public class AiMachineTest {
 
 ---
 
-# spring-boot-ai-agent-engine V 0.1
+# Spring Boot AI Agent Engine - Lightweight State Machine Workflow Engine V 0.2 
+Lightweight · Scalable · Core Framework for AI Intelligent Entities 
++ ✨ A lightweight AI Agent experimental engine, based on state machine process control + Large model intent recognition, enabling automated task orchestration and execution. 
++   ✨  Non-intrusive architecture, capable of seamless integration with existing business systems, allowing easy integration of the original business processes into the AI workflow. 
+---
 
-### Lightweight · Extensible · Core Framework for AI Agent
+# V0.2 Update: 
++ ✅ Reorganized into a standard Spring Boot Starter, supporting automatic configuration and ready to use out of the box
++ ✨ Utilizes configuration-driven approach, supporting external configuration, and no longer hard-codes keys. It is secure and open-source. 
++ ✨ Removed the startup class, with a pure dependency library structure, making it more suitable for use as a second-party package or open-source component
++ ✨ Integrated the API of Huoshan Engine/Doubao Large Model, supporting HTTP connection pool, timeouts, and model configuration
++ ✅ Optimized the Bean loading mechanism, supporting one-click enablement with @EnableAiAgentEngine
++ ✅ Thoroughly cleaned up the project structure, making the code more concise, professional, and easier to maintain
++ ✅ Supports local Maven packaging, installation, and reuse across multiple projects + 📝 Improved documentation, allowing for direct upload to GitHub for open-source use 
 
-A lightweight experimental engine for AI Agent, based on **state machine flow control + LLM intent recognition**, to realize automated task orchestration and execution.
 
-The core goal is to achieve seamless integration with existing business services, making it easy to add legacy business logic to the workflow.
+---
 
-### Core Implemented Capabilities
 
-- ✅ AI Intent Recognition (extensible interface)
-- ✅ State Machine Flow Control
-- ✅ Configurable Task Execution Chain
-- ✅ Global Context Management
-- ✅ Modular Service Extension
-- ✅ Seamless Call of Multi-Service
-- ✅ Automatic Result Transfer Between Steps
 
-### 
-
-#### For Learning
-
-- Spring Boot project architecture practice
-- Basic design ideas of AI Agent
-- State Machine/Strategy design pattern application
-- Integration of intent recognition and workflow execution
-- Development of lightweight automation engine
-
-#### For Extension
-
-Can be extended as a basic framework to:
-
-- Personal AI Assistant
-- Simple automated task tool
-- Intelligent dialogue flow engine
-- Lightweight business automation process
-
-### Tech Stack
-
-- Spring Boot
-- LLM (Volcano Ark / Doubao)
-- State Machine Pattern
-- Strategy Pattern
-- Global Context Management
-- Lightweight operation (no database dependency)
+## Project Introduction 
+This is a lightweight AI intelligent core framework, used to implement the current popular AI Agent architecture concept.
+The project manages processes through a state machine, identifies user intentions through a large model, and automatically executes the corresponding task chains. 
+Achieved core capabilities: 
++ ✅ AI Intent Recognition
++ ✅ State Machine Process Control
++ ✅ Configurable Task Execution Chain
++ ✅ Context Management
++ ✅ Modular Service Extension
++ ✅ Spring Boot Starter Automated Integration

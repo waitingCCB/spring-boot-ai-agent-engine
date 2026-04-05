@@ -1,4 +1,4 @@
-package com.flow.agent.entity;
+package com.flow.agent.core;
 
 import com.flow.agent.enmu.AgentState;
 import lombok.AllArgsConstructor;

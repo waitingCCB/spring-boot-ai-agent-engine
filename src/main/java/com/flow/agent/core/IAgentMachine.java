@@ -1,7 +1,4 @@
-package com.flow.agent.Machine;
-
-import com.flow.agent.entity.AgentContext;
-import com.flow.agent.entity.AgentMachineConfig;
+package com.flow.agent.core;
 
 import java.util.Map;
 

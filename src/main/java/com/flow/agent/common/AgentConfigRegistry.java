@@ -1,6 +1,6 @@
 package com.flow.agent.common;
 
-import com.flow.agent.entity.AgentMachineConfig;
+import com.flow.agent.core.AgentMachineConfig;
 import org.springframework.stereotype.Component;
 
 import java.util.HashMap;

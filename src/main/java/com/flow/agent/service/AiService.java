@@ -4,6 +4,7 @@ import java.util.List;
 
 public interface AiService {
 
-
     String gotIntent(String question, List<String> intents);
+
+    String generateAnswerByPrompt(String question, String prompt);
 }
