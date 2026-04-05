@@ -72,9 +72,9 @@ doubao:
 
 ------
 
-## 二、快速使用（全自动模式・推荐）
+## 二、快速使用（全自动模式）
 
-AI 自动生成工作流 + 自动执行，**一行配置都不用写**
+AI 自动生成工作流 + 自动执行
 
 ```
 @SpringBootTest(classes = AgentAutoConfiguration.class)
@@ -95,7 +95,7 @@ public class TestDemo {
 
     @Test
     public void testAutoRun() {
-        // 用户只需要输入一句话
+        // 用户输入一句话
         String userQuestion = "我想要听一个开心的故事";
 
         // 1. AI 自动生成流程配置文件
@@ -182,7 +182,7 @@ public void testManualRun() {
 
 ## 四、业务类编写规范（@AgentTool + @AgentMethod）
 
-你只需要给业务类加上注解，AI 就能自动识别、编排、调用！
+只需要给业务类加上注解，AI 就能自动识别、编排、调用
 
 ```
 @AgentTool(
@@ -541,6 +541,7 @@ Lightweight · Scalable · Core Framework for AI Intelligent Entities
 This is a lightweight AI intelligent core framework, used to implement the current popular AI Agent architecture concept.
 The project manages processes through a state machine, identifies user intentions through a large model, and automatically executes the corresponding task chains. 
 Achieved core capabilities: 
+
 + ✅ AI Intent Recognition
 + ✅ State Machine Process Control
 + ✅ Configurable Task Execution Chain
